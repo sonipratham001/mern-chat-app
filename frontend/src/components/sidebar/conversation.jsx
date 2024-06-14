@@ -4,18 +4,24 @@ import useMediaQuery from "../../hooks/useMediaQuery"; // Adjust the path accord
 
 const Conversation = ({ conversation, lastIdx, emoji }) => {
     const { selectedConversation, setSelectedConversation } = useConversation();
-    const isSelected = selectedConversation?._id === conversation._id;
     const { onlineUsers } = useSocketContext();
     const isOnline = onlineUsers.includes(conversation._id);
     const isMobile = useMediaQuery('(max-width: 768px)');
+
+    const handleConversationClick = () => {
+        // Only change selected conversation if not already selected
+        if (selectedConversation?._id !== conversation._id) {
+            setSelectedConversation(conversation);
+        }
+    };
 
     return (
         <>
             <div 
                 className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer 
-                    ${isSelected ? "bg-sky-500" : ""}
+                    ${selectedConversation?._id === conversation._id ? "bg-sky-500" : ""}
                 `}
-                onClick={() => setSelectedConversation(conversation)}
+                onClick={handleConversationClick}
             >
                 <div className={`avatar ${isOnline ? "online" : ""}`}>
                     <div className="w-12 rounded-full">
